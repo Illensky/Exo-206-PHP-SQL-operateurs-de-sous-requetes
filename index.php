@@ -10,3 +10,77 @@
  *
  * ( PS: Sélectionnez, mais affichez le résultat à chaque fois ! ).
  */
+
+require __DIR__ . "/Classes/DBSingleton.php";
+
+$pdo = DBSingleton::PDO();
+
+/*================================1===========================================
+
+$stm = $pdo->prepare("
+    SELECT *
+    FROM user 
+");
+
+if ($stm->execute()) {
+    echo "<pre>";
+    print_r($stm->fetchAll());
+    echo "</pre>";
+}
+*/
+
+/*===================================2===================================
+$stm = $pdo->prepare("
+    SELECT *
+    FROM article 
+");
+
+if ($stm->execute()) {
+    echo "<pre>";
+    print_r($stm->fetchAll());
+    echo "</pre>";
+}
+*/
+/*====================================3============================================
+
+$stm = $pdo->prepare("
+    SELECT *
+    FROM user 
+    WHERE id = ANY (SELECT user_fk FROM article WHERE contenu LIKE '%poterie%')
+");
+
+if ($stm->execute()) {
+    echo "<pre>";
+    print_r($stm->fetchAll());
+    echo "</pre>";
+}
+*/
+/*====================================4=============================================*/
+
+$stm = $pdo->prepare("
+    SELECT *
+    FROM user 
+    WHERE id = ANY (SELECT user_fk FROM article GROUP BY user_fk HAVING count(user_fk) >= 2)
+");
+
+if ($stm->execute()) {
+    echo "<pre>";
+    print_r($stm->fetchAll());
+    echo "</pre>";
+}
+
+
+/*=========================================5================================================
+
+$stm = $pdo->prepare("
+    SELECT *
+    FROM user WHERE username LIKE 'jane%' AND id= ANY (SELECT user_fk FROM article)
+    
+");
+
+if ($stm->execute()) {
+    echo "<pre>";
+    print_r($stm->fetchAll());
+    echo "</pre>";
+}
+*/
